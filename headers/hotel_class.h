@@ -8,6 +8,7 @@ class Hotel{
     }rooms[20];
     public:
     Hotel();
+    ~Hotel();
     void room_managment();
     void room_reservation();
     void room_evacuation();
@@ -15,4 +16,6 @@ class Hotel{
     void room_report();
     void income();
     void memory();
+    void checkInput(string,int &);
+    bool isNumber(const string);
 };

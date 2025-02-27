@@ -5,12 +5,20 @@
 using namespace std;
 int main()
 {
+    string s;
     int x;
     cin>>x;
-    while(cin.fail()){
-        cout<<"Error please Enter a valid NUmber\n";
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin>>x;
+    if(s.empty()){
+        cout<<"bos ola bilmez";
+        return 0;
     }
+    for (char c:s)
+    {
+        if(!isdigit(c)){
+            cout<<"please enter a valid number";
+        }
+    }
+
+
+   cout<<x;
 }

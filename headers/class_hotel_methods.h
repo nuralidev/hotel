@@ -1,26 +1,32 @@
 Hotel::Hotel()
 {
     counter1 = 0, counter2 = 0;
+    for (int i = 0; i < 20; i++)
+    {
+        rooms[i] = emtpy_room;
+        customer_name[i] = nullptr;
+        customer_lastname[i] = nullptr;
+    }
+
     room_managment();
 }
 void Hotel::room_managment()
 {
     int number;
-    for (int i = 0; i <= 20; i++)
+    for (int i = 0; i < 20; i++)
     {
         rooms[i] = emtpy_room;
     }
     do
     {
-        cout << "\t ------ Otel Mesaji----\n";
-        cout << "\t1. Oda Rezervasiya\n";
-        cout << "\t2. Oda Bosaltma\n ";
-        cout << "\t3. Dolu Oda Sayisi\n";
-        cout << "\t4. Oda Reportu\n";
-        cout << "\t5. Toplam gelir\n";
-        cout << "\t6. Cixis Et\n";
-        cout << "\tSecimini Gir: ";
-        cin >> number;
+        cout << "------ Otel Mesaji----\n";
+        cout << "1. Otaq Rezervasiya\n";
+        cout << "2. Otaq Bosaltma\n";
+        cout << "3. Dolu Oda Sayi\n";
+        cout << "4. Otaq Reportu\n";
+        cout << "5. Toplam gelir\n";
+        cout << "6. Cixis Et\n";
+        checkInput("Secimini Gir", number);
         switch (number)
         {
         case 1:
@@ -39,11 +45,10 @@ void Hotel::room_managment()
             income();
             break;
         case 6:
-            memory();
-            exit(1);
+            return ;
             break;
         default:
-            cout << "Duzgun Secim Edilmedi";
+            cout << RED<<"Duzgun Secim Edilmedi\n"<<RESET;
             break;
         }
     } while (number != 6);
@@ -52,10 +57,10 @@ void Hotel::room_reservation()
 {
     int number, numberOfDays, i = 1, j = 13;
     string name, lastname;
-    cout << "\n\t Otaq tipi secin\n";
-    cout << "\t1. Tek Adamliq\n";
-    cout << "\t2. Iki Neferlik\n";
-    cout << "Secimi Daxil edin: ";
+    cout << " \nOtaq tipi secin\n";
+    cout << "1. Tek Adamliq\n";
+    cout << "2. Iki Neferlik\n";
+    cout << "\nSecimi Daxil edin: ";
     cin >> number;
     switch (number)
     {
@@ -69,8 +74,7 @@ void Hotel::room_reservation()
                 cin >> name;
                 cout << "Soyadiniz: ";
                 cin >> lastname;
-                cout << "Nece gun Qalacaqsiz: ";
-                cin >> numberOfDays;
+                checkInput("Nece gun Qalacaqsiz", numberOfDays);
                 sum += numberOfDays * 600;
                 counter1++;
                 customer_name[i] = new string;
@@ -95,8 +99,7 @@ void Hotel::room_reservation()
                 cin >> name;
                 cout << "Soyadiniz: ";
                 cin >> lastname;
-                cout << "Nece gun Qalacaqsiz: ";
-                cin >> numberOfDays; //Burada istifadecinin girisini yoxlamaq lazimdi 
+                checkInput("Nece gun Qalacaqsiz: ", numberOfDays);
                 sum += numberOfDays * 1000;
                 counter2++;
                 customer_name[j] = new string;
@@ -106,13 +109,15 @@ void Hotel::room_reservation()
                 break;
             }
         }
-        if (i == 20)
+        if (j == 20)
         {
-            cout << "Iki Adamliq otaqlar Doldu\n";
+            cout <<"Iki Adamliq otaqlar Doldu\n";
         }
         break;
     default:
-        cout << "Oda Secimi Yalnisdir! \n";
+        cout << RED<<"Otaq Secimi Yalnisdir! \n"<<RESET;
+        cin.clear();
+        cin.ignore(256, '\n');
         break;
     }
 }
@@ -136,7 +141,7 @@ void Hotel::room_evacuation()
         }
         cout << "Otaq Bosaltildi\n";
     }
-    else if (number <= 0 || number > 20)
+    else if (number <1 || number > 20)
     {
         cout << "Bele Otaq movcud deyil\n";
         room_evacuation();
@@ -159,7 +164,7 @@ void Hotel::room_report()
         {
             if (rooms[i] == full_room)
             {
-                cout << "Nomre: " << i << "\tAd: " << *customer_name[i]<<"       " << "\tSoyad: " << *customer_lastname[i] << "\n";
+                cout << "Nomre: " << i << "\tAd: " << *customer_name[i] << "       " << "\tSoyad: " << *customer_lastname[i] << "\n";
             }
         }
         cout << "=================================\n";
@@ -178,7 +183,50 @@ void Hotel::memory()
 {
     for (int i = 0; i < 20; i++)
     {
-        delete customer_lastname[i];
-        delete customer_lastname[i];
+        if(customer_lastname[i]!=nullptr){
+
+            delete customer_lastname[i];
+            customer_lastname[i]=nullptr;
+        }
+        if(customer_name[i]!=nullptr){
+
+            delete customer_name[i];
+            customer_name[i]=nullptr;
+        }
+ 
     }
+    cout<<"Yaddas temizlendi";
+}
+void Hotel::checkInput(string sablonMesaj, int &checkObject)
+{
+    string giris;
+    cout << sablonMesaj << ": ";
+    cin >> giris;
+    while (!isNumber(giris))
+    {
+        cout << RED<<"Zehmet olmasa eded daxil edin\n"<<RESET;
+        cin.clear();
+        cin.ignore(256, '\n');
+        cout << sablonMesaj << ": ";
+        cin >> giris;
+    }
+    checkObject = stoi(giris);
+}
+bool Hotel::isNumber(const string s)
+{
+    if (s.empty())
+    {
+        return false;
+    }
+    for (char c : s)
+    {
+        if (!isdigit(c))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+Hotel::~Hotel() {
+    memory(); 
 }
